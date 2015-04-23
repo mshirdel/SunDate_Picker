@@ -3,7 +3,7 @@ SunDate Picker
 
 ** کتابخونه ای برای انتخاب تاریخ شمسی در اندروید.
 
-![](images/screen-shot.jpg)
+![](screen-shot.jpg)
 
  این کتابخونه برای استفاده در برنامه [مکتب](http://cafebazaar.ir/app/com.afkar.maktab) نوشته شده.
  ----------
