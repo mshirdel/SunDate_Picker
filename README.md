@@ -24,9 +24,8 @@ SunDate Picker
     // ایجاد یک نمونه.
     DatePickerDialog dp = DatePickerDialog.newInstance(this, false);
 
-    // انتخاب رنگ اصلی و فرعی
-    dp.setMainColor(color);
-	dp.setSecondColor(color);
+    // انتخاب رنگ
+    dp.setColor(color);
 	
 	// کد درخواست
 	dp.setRequestID(requestID);
