@@ -57,9 +57,12 @@ public class YearAdapter extends BaseAdapter {
 
 		tv.setBackgroundColor(context.getResources().getColor(
 				android.R.color.transparent));
+		tv.setTextColor(context.getResources().getColor(R.color.gray));
+
 		if (years[position] == Date.getYear()) {
 			Date.setYearText(tv);
 			tv.setBackgroundDrawable(DatePickerDialog.getCircle());
+			tv.setTextColor(DatePickerDialog.getColor());
 		}
 
 		tv.setOnClickListener(new OnClickListener() {
@@ -72,6 +75,8 @@ public class YearAdapter extends BaseAdapter {
 					Date.getYearText().setBackgroundColor(
 							context.getResources().getColor(
 									android.R.color.transparent));
+					Date.getYearText().setTextColor(
+							context.getResources().getColor(R.color.gray));
 				}
 
 				Date.setYear(years[position]);
@@ -79,6 +84,7 @@ public class YearAdapter extends BaseAdapter {
 				Date.updateUI();
 
 				tv.setBackgroundDrawable(DatePickerDialog.getCircle());
+				tv.setTextColor(DatePickerDialog.getColor());
 				Util.tryVibrate(context);
 				DatePickerDialog.dayMonth.performClick();
 			}

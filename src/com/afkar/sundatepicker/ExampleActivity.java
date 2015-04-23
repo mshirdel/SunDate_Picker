@@ -53,11 +53,8 @@ public class ExampleActivity extends FragmentActivity implements
 		if (v.getId() == R.id.date2)
 			id = 2;
 
-		boolean darkTheme = ((CheckBox) findViewById(R.id.darkCheckBox))
-				.isChecked();
-
 		DatePickerDialog dp = DatePickerDialog.newInstance(
-				ExampleActivity.this, id, darkTheme);
+				ExampleActivity.this, id);
 
 		if (!((CheckBox) findViewById(R.id.fontCheckBox)).isChecked())
 			dp.setTypeFace(Typeface.createFromAsset(getAssets(), "pFont.ttf"));
@@ -72,7 +69,7 @@ public class ExampleActivity extends FragmentActivity implements
 
 		dp.setFutureDisabled(((CheckBox) findViewById(R.id.futureCheckBox))
 				.isChecked());
-
+		
 		dp.show(getSupportFragmentManager(), "");
 	}
 

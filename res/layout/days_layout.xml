@@ -3,10 +3,10 @@
     android:id="@+id/grid_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:columnWidth="33dp"
+    android:columnWidth="30dp"
     android:gravity="center"
     android:listSelector="@null"
     android:numColumns="7"
     android:scrollbars="none"
     android:stretchMode="columnWidth"
-    android:verticalSpacing="2dp" />
+    android:verticalSpacing="1dp" />

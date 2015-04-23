@@ -3,17 +3,18 @@ package com.afkar.sundatepicker;
 import java.util.Calendar;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,14 +36,13 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 	private static TextView yearTV;
 	private static TextView dayNameTV;
 	TextView doneTV;
+	TextView cancelTV;
 
 	public static LinearLayout dayMonth;
 	FrameLayout frameLayout;
 	FragmentManager fragmentManager;
 
-	private static int mBlue = 0;
-	private static int mGry = 0;
-	static boolean mDarkTheme;
+	private static int mColor = 0;
 
 	static int minYear;
 	static int maxYear;
@@ -61,35 +61,23 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 	}
 
 	public static DatePickerDialog newInstance(
-			OnDateSetListener onDateSetListener, int requestID,
-			boolean darkTheme) {
+			OnDateSetListener onDateSetListener, int requestID) {
 
 		JDF jdf = new JDF();
 		return newInstance(onDateSetListener, requestID, jdf.getIranianYear(),
-				jdf.getIranianMonth(), jdf.getIranianDay(), darkTheme);
+				jdf.getIranianMonth(), jdf.getIranianDay());
 	}
 
 	public static DatePickerDialog newInstance(
 			OnDateSetListener onDateSetListener, boolean darkTheme) {
-		return newInstance(onDateSetListener, 0, darkTheme);
+		return newInstance(onDateSetListener, 0);
 	}
 
 	public static DatePickerDialog newInstance(
 			OnDateSetListener onDateSetListener, int requestID, int year,
-			int month, int day, boolean darkTheme) {
+			int month, int day) {
 
 		DatePickerDialog datePickerDialog = new DatePickerDialog();
-
-		mDarkTheme = darkTheme;
-		if (mDarkTheme)
-			datePickerDialog.setStyle(
-					android.R.style.Theme_Holo_Dialog_NoActionBar_MinWidth,
-					android.R.style.Theme_Holo_Dialog_NoActionBar_MinWidth);
-		else
-			datePickerDialog
-					.setStyle(
-							android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth,
-							android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
 
 		mCallBack = onDateSetListener;
 		Date.setDate(year, month, day, false);
@@ -97,8 +85,7 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 		maxYear = minYear + 2;
 		mVibrate = true;
 		id = requestID;
-		mBlue = 0;
-		mGry = 0;
+		mColor = 0;
 		mTypeFace = null;
 		maxMonth = 0;
 
@@ -107,10 +94,6 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 
 	@Override
 	public void onStart() {
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		int screenWidth = (int) (metrics.widthPixels * 0.75);
-		int screenHeight = (int) (metrics.heightPixels * 0.90);
-		getDialog().getWindow().setLayout(screenWidth, screenHeight);
 		setRetainInstance(true);
 		super.onStart();
 	}
@@ -119,19 +102,20 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 	public View onCreateView(LayoutInflater layoutInflater,
 			ViewGroup container, Bundle savedInstanceState) {
 
-		final View view = layoutInflater.inflate(R.layout.main_layout, null);
+		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
+		getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		if (mBlue == 0)
-			mBlue = getResources().getColor(R.color.blue);
+		final View view = layoutInflater.inflate(R.layout.main_layout,
+				container, false);
 
-		if (mGry == 0)
-			mGry = getResources().getColor(R.color.gray);
+		if (mColor == 0)
+			mColor = getResources().getColor(R.color.blue);
 
 		circle = new GradientDrawable();
 		circle.setCornerRadius(getResources().getDimension(
 				R.dimen.circle_radius));
-		circle.setColor(mBlue);
-		circle.setAlpha(80);
+		circle.setColor(mColor);
+		circle.setAlpha(50);
 
 		frameLayout = (FrameLayout) view.findViewById(R.id.frame_container);
 		fragmentManager = getChildFragmentManager();
@@ -141,6 +125,7 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 		yearTV = (TextView) view.findViewById(R.id.year);
 		dayNameTV = (TextView) view.findViewById(R.id.dayName);
 		doneTV = (TextView) view.findViewById(R.id.done);
+		cancelTV = (TextView) view.findViewById(R.id.cancel);
 		dayMonth = (LinearLayout) view.findViewById(R.id.dayMonthBack);
 
 		if (mTypeFace != null) {
@@ -149,20 +134,19 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 			yearTV.setTypeface(mTypeFace);
 			dayNameTV.setTypeface(mTypeFace);
 			doneTV.setTypeface(mTypeFace);
+			cancelTV.setTypeface(mTypeFace);
 		}
 
-		if (mDarkTheme) {
-			dayNameTV.setTextColor(getResources().getColor(R.color.black));
-			dayNameTV.setBackgroundColor(getResources().getColor(
-					R.color.transparent_white));
-		} else {
-			dayNameTV.setTextColor(getResources().getColor(R.color.white));
-			dayNameTV.setBackgroundColor(getResources().getColor(R.color.gray));
-		}
+		doneTV.setTextColor(mColor);
+		cancelTV.setTextColor(mColor);
+
+		((LinearLayout) view.findViewById(R.id.blue_card))
+				.setBackgroundColor(mColor);
 
 		dayMonth.setOnClickListener(this);
 		yearTV.setOnClickListener(this);
 		doneTV.setOnClickListener(this);
+		cancelTV.setOnClickListener(this);
 
 		updateDisplay(Date.getYear(), Date.getMonth(), Date.getDay());
 
@@ -173,16 +157,15 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 
 	@Override
 	public void onClick(View v) {
-
 		if (v.getId() == R.id.year) {
-			yearTV.setTextColor(mBlue);
-			dayTV.setTextColor(mGry);
-			monthTV.setTextColor(mGry);
+			dayTV.setAlpha(0.5f);
+			monthTV.setAlpha(0.5f);
+			yearTV.setAlpha(1f);
 			switchFragment(new YearMainFragement(minYear, maxYear));
 		} else if (v.getId() == R.id.dayMonthBack) {
-			yearTV.setTextColor(mGry);
-			dayTV.setTextColor(mBlue);
-			monthTV.setTextColor(mBlue);
+			dayTV.setAlpha(1f);
+			monthTV.setAlpha(1f);
+			yearTV.setAlpha(0.5f);
 			switchFragment(new MonthMainFragement());
 		} else if (v.getId() == R.id.done) {
 			if (mCallBack != null) {
@@ -198,6 +181,8 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 						Date.getMonth(), Date.getDay());
 				Util.tryVibrate(getActivity());
 			}
+			dismiss();
+		} else if (v.getId() == R.id.cancel) {
 			dismiss();
 		}
 	}
@@ -215,11 +200,7 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 	 * Setters
 	 */
 	public void setMainColor(int color) {
-		mBlue = color;
-	}
-
-	public void setSecondColor(int color) {
-		mGry = color;
+		mColor = color;
 	}
 
 	public void setYearRange(int _minYear, int _maxYear) {
@@ -282,12 +263,8 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 		return circle;
 	}
 
-	public static int getBlueColor() {
-		return mBlue;
-	}
-
-	public static int getGrayColor() {
-		return mGry;
+	public static int getColor() {
+		return mColor;
 	}
 
 	public static boolean checkVibrate() {
@@ -321,5 +298,4 @@ public class DatePickerDialog extends DialogFragment implements OnClickListener 
 		public abstract void onDateSet(int id, Calendar calendar, int year,
 				int month, int day);
 	}
-
 }

@@ -1,5 +1,7 @@
 package com.afkar.sundatepicker.year;
 
+import java.util.Arrays;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.afkar.sundatepicker.R;
+import com.afkar.sundatepicker.tool.Date;
 
 /*
  * Created by Alireza Afkar - 24/10/14
@@ -42,6 +45,8 @@ public class YearFragement extends Fragment {
 		ListView list = (ListView) view.findViewById(android.R.id.list);
 		list.setSelector(getResources().getDrawable(R.drawable.transparent));
 		list.setAdapter(new YearAdapter(getActivity(), years));
+		int index=Arrays.binarySearch(years, Date.getYear());
+		list.setSelection(index);
 		super.onViewCreated(view, savedInstanceState);
 	}
 }

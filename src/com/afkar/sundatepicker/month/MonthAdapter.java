@@ -46,6 +46,8 @@ public class MonthAdapter extends BaseAdapter {
 		int days = 30;
 		if (month < 6)
 			days = 31;
+		if (month == 11 && !Util.isLeapYear(Date.getYear()))
+			days = 29;
 
 		if (DatePickerDialog.maxMonth == month + 1)
 			days = today.getIranianDay();
@@ -75,7 +77,7 @@ public class MonthAdapter extends BaseAdapter {
 
 		tv.setBackgroundColor(context.getResources().getColor(
 				android.R.color.transparent));
-		tv.setTextColor(DatePickerDialog.getGrayColor());
+		tv.setTextColor(context.getResources().getColor(R.color.gray));
 
 		if (position >= 0 && position - startDay >= 0) {
 			position -= startDay;
@@ -87,14 +89,14 @@ public class MonthAdapter extends BaseAdapter {
 					&& Date.getYear() == today.getIranianYear()) {
 				tv.setBackgroundColor(context.getResources().getColor(
 						android.R.color.transparent));
-				tv.setTextColor(DatePickerDialog.getBlueColor());
+				tv.setTextColor(DatePickerDialog.getColor());
 				Date.setTodayText(tv);
 			}
 
 			if (Date.getMonth() == month + 1 && Date.getDay() == position + 1) {
 				Date.setDayText(tv);
 				tv.setBackgroundDrawable(DatePickerDialog.getCircle());
-				tv.setTextColor(DatePickerDialog.getGrayColor());
+				tv.setTextColor(DatePickerDialog.getColor());
 			}
 
 			final int day = position + 1;
@@ -109,7 +111,7 @@ public class MonthAdapter extends BaseAdapter {
 								context.getResources().getColor(
 										android.R.color.transparent));
 						Date.getDayText().setTextColor(
-								DatePickerDialog.getGrayColor());
+								context.getResources().getColor(R.color.gray));
 					}
 
 					if (Date.getTodayText() != null) {
@@ -117,7 +119,7 @@ public class MonthAdapter extends BaseAdapter {
 								context.getResources().getColor(
 										android.R.color.transparent));
 						Date.getTodayText().setTextColor(
-								DatePickerDialog.getBlueColor());
+								DatePickerDialog.getColor());
 					}
 
 					Date.setDay(day);
@@ -126,7 +128,7 @@ public class MonthAdapter extends BaseAdapter {
 					Date.updateUI();
 
 					tv.setBackgroundDrawable(DatePickerDialog.getCircle());
-					tv.setTextColor(DatePickerDialog.getGrayColor());
+					tv.setTextColor(DatePickerDialog.getColor());
 
 					Util.tryVibrate(context);
 				}
